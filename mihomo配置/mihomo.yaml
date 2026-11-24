@@ -77,71 +77,67 @@ proxy-groups:
     type: select
     proxies: [Auto, DIRECT]
     use: [LongLight]
-    exclude-filter: '群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用网址|备用域名|备用官网|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内无法|国内访问|地址|频道|无法|说明|提示|访问|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|剩余|发布|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|过滤|⚠️|t\.me/\+|\bexpire\b|\bhttps?://|\btraffic\b'
     icon: https://raw.githubusercontent.com/Orz-3/mini/refs/heads/master/Color/Kuai.png
   - name: Auto
     type: url-test
     url: https://www.gstatic.com/generate_204
     interval: 300
     use: [LongLight]
-    exclude-filter: '群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用网址|备用域名|备用官网|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内无法|国内访问|地址|频道|无法|说明|提示|访问|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|剩余|发布|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|过滤|⚠️|t\.me/\+|\bexpire\b|\bhttps?://|\btraffic\b'
     icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/Speedtest.png
   - name: Relay
     type: select
     proxies: [DIRECT]
     use: [LongLight]
-    exclude-filter: '群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用网址|备用域名|备用官网|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内无法|国内访问|地址|频道|无法|说明|提示|访问|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|剩余|发布|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|过滤|⚠️|t\.me/\+|\bexpire\b|\bhttps?://|\btraffic\b'
-    exclude-filter: '群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用网址|备用域名|备用官网|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内无法|国内访问|地址|频道|无法|说明|提示|访问|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|剩余|发布|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|过滤|⚠️|t\.me/\+|\bexpire\b|\bhttps?://|\btraffic\b|Relay'
+    exclude-filter: "Relay"
     icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/TestFlight.png
   - name: PayPal
     type: select
     proxies: [Default, Auto]
     use: [LongLight]
-    exclude-filter: '群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用网址|备用域名|备用官网|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内无法|国内访问|地址|频道|无法|说明|提示|访问|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|剩余|发布|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|过滤|⚠️|t\.me/\+|\bexpire\b|\bhttps?://|\btraffic\b'
     icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/PayPal.png
+  - name: AI-落地
+    type: url-test
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    use: [LongLight]
+    filter: '落地|家宽|住宅|原生\s*IP|家庭宽带|\b(?:Exit|Landing|ISP|RES)\b|residential'
+    icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/ChatGPT.png
   - name: AI-美国
     type: url-test
     url: https://www.gstatic.com/generate_204
     interval: 300
     use: [LongLight]
     filter: '🇺🇸|美国|纽约|洛杉矶|旧金山|芝加哥|休斯顿|迈阿密|西雅图|波士顿|华盛顿|拉斯维加斯|圣何塞|\bUSA?\b|america|united\s*states'
-    exclude-filter: '群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用网址|备用域名|备用官网|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内无法|国内访问|地址|频道|无法|说明|提示|访问|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|剩余|发布|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|过滤|⚠️|t\.me/\+|\bexpire\b|\bhttps?://|\btraffic\b'
     icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/ChatGPT.png
   - name: AI-Service
     type: select
-    proxies: [AI-美国, Default, Auto]
+    proxies: [AI-落地, AI-美国, Default, Auto]
     use: [LongLight]
-    exclude-filter: '群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用网址|备用域名|备用官网|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内无法|国内访问|地址|频道|无法|说明|提示|访问|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|剩余|发布|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|过滤|⚠️|t\.me/\+|\bexpire\b|\bhttps?://|\btraffic\b'
     icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/ChatGPT.png
   - name: TikTok
     type: select
     proxies: [Default, Auto]
     use: [LongLight]
-    exclude-filter: '群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用网址|备用域名|备用官网|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内无法|国内访问|地址|频道|无法|说明|提示|访问|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|剩余|发布|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|过滤|⚠️|t\.me/\+|\bexpire\b|\bhttps?://|\btraffic\b'
     icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/TikTok.png
   - name: Streaming-Media
     type: select
     proxies: [Default, Auto]
     use: [LongLight]
-    exclude-filter: '群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用网址|备用域名|备用官网|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内无法|国内访问|地址|频道|无法|说明|提示|访问|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|剩余|发布|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|过滤|⚠️|t\.me/\+|\bexpire\b|\bhttps?://|\btraffic\b'
     icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/Netflix.png
   - name: Telegram
     type: select
     proxies: [Default, Auto]
     use: [LongLight]
-    exclude-filter: '群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用网址|备用域名|备用官网|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内无法|国内访问|地址|频道|无法|说明|提示|访问|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|剩余|发布|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|过滤|⚠️|t\.me/\+|\bexpire\b|\bhttps?://|\btraffic\b'
     icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/Telegram.png
   - name: Instagram
     type: select
     proxies: [Default, Auto]
     use: [LongLight]
-    exclude-filter: '群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用网址|备用域名|备用官网|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内无法|国内访问|地址|频道|无法|说明|提示|访问|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|剩余|发布|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|过滤|⚠️|t\.me/\+|\bexpire\b|\bhttps?://|\btraffic\b'
     icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/Instagram.png
   - name: Emby
     type: select
     proxies: [Default, Auto, DIRECT]
     use: [LongLight]
-    exclude-filter: '群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用网址|备用域名|备用官网|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内无法|国内访问|地址|频道|无法|说明|提示|访问|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|剩余|发布|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|过滤|⚠️|t\.me/\+|\bexpire\b|\bhttps?://|\btraffic\b'
     icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/Emby.png
 
 rule-providers:
