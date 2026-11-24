@@ -61,25 +61,19 @@ type 可以赋值 0 或 1,0 表示单条订阅，1 表示组合订阅
 
 这种方式更加灵活且更加全面，可以随时将落地节点切换为直连使用
 
-## 自建节点专属特性
+## 私人固定节点极简扁平版
 
-sing-box v1.14 模板与 merge.js 已按个人自建节点场景（多台 VPS、VLESS/REALITY、Hysteria 2、SS2022 等）重构，并整合 [MyClash](https://github.com/Mk8gg/MyClash) 的精细化应用分流体系：
+本仓库当前面向**私人固定自建节点**（少数几台自己的 VPS，如 VLESS/REALITY、Hysteria 2、SS2022），sing-box v1.14 模板与 merge.js 已按极简扁平结构重构，并整合 [MyClash](https://github.com/Mk8gg/MyClash) 的应用分流规则顺序：
 
-- **去机场化精简分组**：自建节点没有倍率计费与机场广告节点，因此删除了倍率分组与宽泛的广告词过滤（不会误杀 `香港-备用`、`美国-国内优化` 这类自建命名），默认仅过滤显式标记 `[停用]` / `[维护]` / `[disabled]` / `停用` / `维护中` 的节点。策略组只保留地区组（香港、日本、美国、新加坡、台湾、欧洲、其他）、落地节点组与应用分流组，模板中以 `{all}`、`{hk}`、`{jp}`、`{us}`、`{sg}`、`{tw}`、`{eu}`、`{landing}`、`{other}` 占位符引用。
-- **应用分流（对齐 MyClash，按自建风控特点排序）**：AI 与 TikTok、Netflix、Crypto 默认优先干净的落地/家宽节点，AI 组内还可直接点选任意一台自建机；其余有 FCM、Google、YouTube、GitHub、Microsoft、Apple、Telegram、Steam、Twitter、Meta、Emby、Spotify、PayPal，以及作为 route.final 的“漏网之鱼”。另有 B 站 PCDN 域名拦截与国外 QUIC（UDP 443）拦截。
-- **单节点防套娃**：某个地区只匹配到 1 台节点时，merge.js 自动删除该地区的 `-自动选择` urltest 组，父级策略组直接引用这台节点，不出现“策略组套测速组套 1 个节点”的冗余层级；某地区/落地节点为空时，对应策略组会被迭代清理干净，不留断链。
-- **低频探活**：所有 urltest 间隔为 10 分钟（idle_timeout 30 分钟），减少对自建 VPS 的探活消耗与日志刷屏。
-- **规则集**：统一采用 `appshubcc/bett-rules@sing` 的 `.srs` 二进制规则集（与 MyClash 同源），`download_detour` 走总代理组更新；原有的防 DNS 泄露设计（geosite-cn 仅用于 DNS 分流、路由只认 geoip-cn）、各平台模板差异（auto_redirect / Fake-IP / IPv6 双栈）保持不变。
+- **零自动测速、零地区嵌套**：没有任何 urltest 组，也没有地区/分类中间套壳组。第一排总出口组 `Default` 直接平铺全部固定节点（占位符 `{all}`，保持订阅里的排列顺序），并开启 `interrupt_exist_connections`——点哪台就立刻全切到哪台。
+- **应用分流默认跟随第一排**：AI、Google、YouTube、GitHub、Telegram、TikTok、Twitter、Meta、Netflix、Spotify、Crypto、Microsoft、Apple、Steam、Emby、PayPal、FCM 与“漏网之鱼”（route.final）全部是扁平 selector，第一项指向 `Default` 自动跟随第一排选择，后面直接平铺全部固定节点，需要给某个 App 单独锁一台 VPS 时直接点节点即可。merge.js 仅过滤显式标记 `[停用]` / `[维护]` / `[disabled]` / `停用` / `维护中` 的节点并做 tag 去重，不做任何机场式名称过滤。
+- **Relay 按需出现**：给某台落地节点在 Sub-Store 里加上 `"detour": "Relay"` 后，在 `Relay` 组里选 `Direct-Out` 即直连落地机，选某台优化线路入口机即形成“中转 -> 落地”链式代理；merge.js 会自动把落地节点本身从 Relay 候选（`{relay_candidates}`）中剔除，绝不回环。若订阅里没有任何节点使用 Relay，`Relay` 组会被自动删除，不占界面。
+- **完整适配 sing-box 1.14.0+**：无 `download_detour`、`store_rdrc`、`independent_cache` 等弃用字段与警告；规则集统一使用 GitHub 官方直连源 `raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing` 的 `.srs`（与 MyClash 同源），经顶层 `http_clients` + `route.default_http_client: "proxy-client"` 走代理组更新；防 DNS 泄露设计（geosite-cn 仅用于 DNS 分流、路由只认 geoip-cn、节点域名走国内直连 DNS 解析）保留不变。
 
-### 落地节点配合 Relay 链式代理（零回环）
+### 模板区分
 
-在 Sub-Store 中给落地节点的配置末尾加上：
-
-```json
-"detour": "Relay"
-```
-
-然后在面板的 `Relay` 策略组中选择前置：选 `Direct-Out` 即直连这台落地机；选某个地区组或某台优化线路入口机（`{relay_candidates}` 展开的候选节点），即自动形成“中转入口 -> 落地机”的链式代理。merge.js 会自动把 detour 指向 Relay 的落地节点从 Relay 候选里剔除，**绝不会出现把落地机选成自己前置的回环死循环**；落地节点本身仍正常出现在地区组、落地节点组与 AI 等策略组中。
+- `singbox.json`（含 fakeip 版）：OpenWrt / Linux 透明代理用，保留 `auto_redirect` 与局域网面板（`0.0.0.0:9090`）。
+- `singbox_win.json`（含 fakeip 版）：Android / iOS / Windows 用，不含 `auto_redirect` / `interface_name` / `dns_mode`，面板仅监听 `127.0.0.1:9090`。
 
 ## 鸣谢
 
