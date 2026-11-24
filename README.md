@@ -33,7 +33,7 @@ openwrt端的**mac地址过滤、仅常用端口代理**脚本在1.14中已不�
 3. 在 sub-store 的文件管理功能中编辑 singbox_template.json 添加一个脚本操作，并且选择链接：
 
 ```
-https://ghfast.top/raw.githubusercontent.com/LongLights/sing-box_template_merge_sub-store/main/merge.js#name=<你在sub-store中的订阅名称>&type=<在sub-store中的订阅类型>
+https://ghfast.top/raw.githubusercontent.com/Mk8gg/sing-box_template_merge_sub-store/main/merge.js#name=<你在sub-store中的订阅名称>&type=<在sub-store中的订阅类型>
 ```
 
 type 可以赋值 0 或 1,0 表示单条订阅，1 表示组合订阅
@@ -42,7 +42,7 @@ type 可以赋值 0 或 1,0 表示单条订阅，1 表示组合订阅
 
 ## 关于链式代理及中继节点分组
 
-如果使用本项目的无地区分组，会发现多出了一个“Relay”策略组，并且默认选择是“Direct-Out”，他要配合你的“链式代理落地节点”使用。
+使用本项目的 sing-box 模板，会发现多出了一个“Relay”策略组，并且默认选择是“Direct-Out”，他要配合你的“链式代理落地节点”使用。
 
 何为链式代理落地节点：
 在 sing-box 中，你可以在你的节点信息最后添加一行
@@ -60,6 +60,26 @@ type 可以赋值 0 或 1,0 表示单条订阅，1 表示组合订阅
 （也就是说，当你通过这种方式并且定义链式节点的分流规则时（如：将 netflix 分流至链式节点），就仅需要在两台 vps 配置代理协议本身来实现 sniproxy+dnsmasq 的落地机分流解锁功能）
 
 这种方式更加灵活且更加全面，可以随时将落地节点切换为直连使用
+
+## 自建节点专属特性
+
+sing-box v1.14 模板与 merge.js 已按个人自建节点场景（多台 VPS、VLESS/REALITY、Hysteria 2、SS2022 等）重构，并整合 [MyClash](https://github.com/Mk8gg/MyClash) 的精细化应用分流体系：
+
+- **去机场化精简分组**：自建节点没有倍率计费与机场广告节点，因此删除了倍率分组与宽泛的广告词过滤（不会误杀 `香港-备用`、`美国-国内优化` 这类自建命名），默认仅过滤显式标记 `[停用]` / `[维护]` / `[disabled]` / `停用` / `维护中` 的节点。策略组只保留地区组（香港、日本、美国、新加坡、台湾、欧洲、其他）、落地节点组与应用分流组，模板中以 `{all}`、`{hk}`、`{jp}`、`{us}`、`{sg}`、`{tw}`、`{eu}`、`{landing}`、`{other}` 占位符引用。
+- **应用分流（对齐 MyClash，按自建风控特点排序）**：AI 与 TikTok、Netflix、Crypto 默认优先干净的落地/家宽节点，AI 组内还可直接点选任意一台自建机；其余有 FCM、Google、YouTube、GitHub、Microsoft、Apple、Telegram、Steam、Twitter、Meta、Emby、Spotify、PayPal，以及作为 route.final 的“漏网之鱼”。另有 B 站 PCDN 域名拦截与国外 QUIC（UDP 443）拦截。
+- **单节点防套娃**：某个地区只匹配到 1 台节点时，merge.js 自动删除该地区的 `-自动选择` urltest 组，父级策略组直接引用这台节点，不出现“策略组套测速组套 1 个节点”的冗余层级；某地区/落地节点为空时，对应策略组会被迭代清理干净，不留断链。
+- **低频探活**：所有 urltest 间隔为 10 分钟（idle_timeout 30 分钟），减少对自建 VPS 的探活消耗与日志刷屏。
+- **规则集**：统一采用 `appshubcc/bett-rules@sing` 的 `.srs` 二进制规则集（与 MyClash 同源），`download_detour` 走总代理组更新；原有的防 DNS 泄露设计（geosite-cn 仅用于 DNS 分流、路由只认 geoip-cn）、各平台模板差异（auto_redirect / Fake-IP / IPv6 双栈）保持不变。
+
+### 落地节点配合 Relay 链式代理（零回环）
+
+在 Sub-Store 中给落地节点的配置末尾加上：
+
+```json
+"detour": "Relay"
+```
+
+然后在面板的 `Relay` 策略组中选择前置：选 `Direct-Out` 即直连这台落地机；选某个地区组或某台优化线路入口机（`{relay_candidates}` 展开的候选节点），即自动形成“中转入口 -> 落地机”的链式代理。merge.js 会自动把 detour 指向 Relay 的落地节点从 Relay 候选里剔除，**绝不会出现把落地机选成自己前置的回环死循环**；落地节点本身仍正常出现在地区组、落地节点组与 AI 等策略组中。
 
 ## 鸣谢
 
