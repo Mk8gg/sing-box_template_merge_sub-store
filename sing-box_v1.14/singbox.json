@@ -137,15 +137,14 @@
             "tag": "Default",
             "outbounds": [
                 "自动选择",
+                "手动选择",
                 "香港",
                 "日本",
                 "美国",
                 "新加坡",
                 "台湾",
-                "低倍率节点",
-                "高倍率节点",
-                "家宽节点",
-                "手动选择",
+                "欧洲",
+                "落地节点",
                 "其他节点"
             ]
         },
@@ -155,7 +154,8 @@
             "outbounds": [
                 "{all}"
             ],
-            "interval": "3m",
+            "interval": "10m",
+            "idle_timeout": "30m",
             "tolerance": 30
         },
         {
@@ -170,15 +170,32 @@
             "tag": "Relay",
             "outbounds": [
                 "Direct-Out",
-                "Default",
                 "香港",
                 "日本",
                 "美国",
                 "新加坡",
                 "台湾",
-                "家宽节点",
-                "手动选择"
+                "欧洲",
+                "{relay_candidates}"
             ]
+        },
+        {
+            "type": "selector",
+            "tag": "落地节点",
+            "outbounds": [
+                "落地节点-自动选择",
+                "{landing}"
+            ]
+        },
+        {
+            "type": "urltest",
+            "tag": "落地节点-自动选择",
+            "outbounds": [
+                "{landing}"
+            ],
+            "interval": "10m",
+            "idle_timeout": "30m",
+            "tolerance": 30
         },
         {
             "type": "selector",
@@ -194,7 +211,8 @@
             "outbounds": [
                 "{hk}"
             ],
-            "interval": "3m",
+            "interval": "10m",
+            "idle_timeout": "30m",
             "tolerance": 30
         },
         {
@@ -211,7 +229,8 @@
             "outbounds": [
                 "{jp}"
             ],
-            "interval": "3m",
+            "interval": "10m",
+            "idle_timeout": "30m",
             "tolerance": 30
         },
         {
@@ -228,7 +247,8 @@
             "outbounds": [
                 "{us}"
             ],
-            "interval": "3m",
+            "interval": "10m",
+            "idle_timeout": "30m",
             "tolerance": 30
         },
         {
@@ -245,7 +265,8 @@
             "outbounds": [
                 "{sg}"
             ],
-            "interval": "3m",
+            "interval": "10m",
+            "idle_timeout": "30m",
             "tolerance": 30
         },
         {
@@ -262,58 +283,26 @@
             "outbounds": [
                 "{tw}"
             ],
-            "interval": "3m",
+            "interval": "10m",
+            "idle_timeout": "30m",
             "tolerance": 30
         },
         {
             "type": "selector",
-            "tag": "低倍率节点",
+            "tag": "欧洲",
             "outbounds": [
-                "低倍率节点-自动选择",
-                "{low}"
+                "欧洲-自动选择",
+                "{eu}"
             ]
         },
         {
             "type": "urltest",
-            "tag": "低倍率节点-自动选择",
+            "tag": "欧洲-自动选择",
             "outbounds": [
-                "{low}"
+                "{eu}"
             ],
-            "interval": "3m",
-            "tolerance": 30
-        },
-        {
-            "type": "selector",
-            "tag": "高倍率节点",
-            "outbounds": [
-                "高倍率节点-自动选择",
-                "{high}"
-            ]
-        },
-        {
-            "type": "urltest",
-            "tag": "高倍率节点-自动选择",
-            "outbounds": [
-                "{high}"
-            ],
-            "interval": "3m",
-            "tolerance": 30
-        },
-        {
-            "type": "selector",
-            "tag": "家宽节点",
-            "outbounds": [
-                "家宽节点-自动选择",
-                "{home}"
-            ]
-        },
-        {
-            "type": "urltest",
-            "tag": "家宽节点-自动选择",
-            "outbounds": [
-                "{home}"
-            ],
-            "interval": "3m",
+            "interval": "10m",
+            "idle_timeout": "30m",
             "tolerance": 30
         },
         {
@@ -330,20 +319,22 @@
             "outbounds": [
                 "{other}"
             ],
-            "interval": "3m",
+            "interval": "10m",
+            "idle_timeout": "30m",
             "tolerance": 30
         },
         {
             "type": "selector",
             "tag": "AI",
             "outbounds": [
+                "落地节点",
                 "美国",
                 "日本",
                 "新加坡",
                 "台湾",
-                "家宽节点",
                 "Default",
-                "手动选择"
+                "手动选择",
+                "{all}"
             ]
         },
         {
@@ -364,12 +355,12 @@
             "tag": "Google",
             "outbounds": [
                 "Default",
+                "落地节点",
                 "香港",
                 "日本",
                 "美国",
                 "新加坡",
                 "台湾",
-                "家宽节点",
                 "手动选择"
             ]
         },
@@ -383,7 +374,7 @@
                 "美国",
                 "新加坡",
                 "台湾",
-                "低倍率节点",
+                "欧洲",
                 "手动选择"
             ]
         },
@@ -397,6 +388,7 @@
                 "美国",
                 "新加坡",
                 "台湾",
+                "欧洲",
                 "手动选择"
             ]
         },
@@ -456,12 +448,12 @@
             "type": "selector",
             "tag": "TikTok",
             "outbounds": [
-                "Default",
+                "落地节点",
                 "日本",
                 "美国",
                 "新加坡",
                 "台湾",
-                "家宽节点",
+                "Default",
                 "手动选择"
             ]
         },
@@ -495,13 +487,13 @@
             "type": "selector",
             "tag": "Netflix",
             "outbounds": [
-                "Default",
+                "落地节点",
                 "新加坡",
                 "香港",
                 "日本",
                 "美国",
                 "台湾",
-                "家宽节点",
+                "Default",
                 "手动选择"
             ]
         },
@@ -510,22 +502,6 @@
             "tag": "Emby",
             "outbounds": [
                 "Default",
-                "低倍率节点",
-                "Direct-Out",
-                "香港",
-                "日本",
-                "美国",
-                "新加坡",
-                "台湾",
-                "手动选择"
-            ]
-        },
-        {
-            "type": "selector",
-            "tag": "PikPak",
-            "outbounds": [
-                "Default",
-                "低倍率节点",
                 "Direct-Out",
                 "香港",
                 "日本",
@@ -552,13 +528,12 @@
             "type": "selector",
             "tag": "Crypto",
             "outbounds": [
-                "Default",
+                "落地节点",
                 "台湾",
                 "日本",
                 "新加坡",
                 "香港",
-                "美国",
-                "家宽节点",
+                "Default",
                 "手动选择"
             ]
         },
@@ -568,6 +543,7 @@
             "outbounds": [
                 "Default",
                 "Direct-Out",
+                "落地节点",
                 "美国",
                 "香港",
                 "日本",
@@ -581,12 +557,13 @@
             "outbounds": [
                 "Default",
                 "Direct-Out",
+                "手动选择",
                 "香港",
                 "日本",
                 "美国",
                 "新加坡",
                 "台湾",
-                "手动选择"
+                "欧洲"
             ]
         },
         {
@@ -791,14 +768,6 @@
                 "type": "remote",
                 "format": "binary",
                 "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@sing/geo/geosite/category-emby.srs",
-                "download_detour": "Default",
-                "update_interval": "24h"
-            },
-            {
-                "tag": "geosite-pikpak",
-                "type": "remote",
-                "format": "binary",
-                "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@sing/geo/geosite/pikpak.srs",
                 "download_detour": "Default",
                 "update_interval": "24h"
             },
@@ -1143,11 +1112,6 @@
                 "rule_set": "geosite-emby",
                 "action": "route",
                 "outbound": "Emby"
-            },
-            {
-                "rule_set": "geosite-pikpak",
-                "action": "route",
-                "outbound": "PikPak"
             },
             {
                 "rule_set": "geosite-spotify",
