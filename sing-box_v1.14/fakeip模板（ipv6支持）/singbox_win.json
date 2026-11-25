@@ -370,7 +370,7 @@
       "type": "selector",
       "tag": "📊 Speedtest",
       "outbounds": [
-        "🎯 直连",
+        "🇨🇳 国内直连",
         "🚀 默认代理",
         "⚡ 自动测速",
         "{all}"
