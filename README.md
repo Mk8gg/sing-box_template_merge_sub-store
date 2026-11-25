@@ -61,20 +61,6 @@ type 可以赋值 0 或 1,0 表示单条订阅，1 表示组合订阅
 
 这种方式更加灵活且更加全面，可以随时将落地节点切换为直连使用
 
-## 私人固定节点极简扁平版
-
-本仓库当前面向**私人固定自建节点**（少数几台自己的 VPS，如 VLESS/REALITY、Hysteria 2、SS2022），sing-box v1.14 模板与 merge.js 已按极简扁平结构重构，并整合 [MyClash](https://github.com/Mk8gg/MyClash) 的应用分流规则顺序：
-
-- **零自动测速、零地区嵌套**：没有任何 urltest 组，也没有地区/分类中间套壳组。第一排总出口组 `Default` 直接平铺全部固定节点（占位符 `{all}`，保持订阅里的排列顺序），并开启 `interrupt_exist_connections`——点哪台就立刻全切到哪台。
-- **应用分流默认跟随第一排**：AI、Google、YouTube、GitHub、Telegram、TikTok、Twitter、Meta、Netflix、Spotify、Crypto、Microsoft、Apple、Steam、Emby、PayPal、FCM 与“漏网之鱼”（route.final）全部是扁平 selector，第一项指向 `Default` 自动跟随第一排选择，后面直接平铺全部固定节点，需要给某个 App 单独锁一台 VPS 时直接点节点即可。merge.js 仅过滤显式标记 `[停用]` / `[维护]` / `[disabled]` / `停用` / `维护中` 的节点并做 tag 去重，不做任何机场式名称过滤。
-- **Relay 按需出现**：给某台落地节点在 Sub-Store 里加上 `"detour": "Relay"` 后，在 `Relay` 组里选 `Direct-Out` 即直连落地机，选某台优化线路入口机即形成“中转 -> 落地”链式代理；merge.js 会自动把落地节点本身从 Relay 候选（`{relay_candidates}`）中剔除，绝不回环。若订阅里没有任何节点使用 Relay，`Relay` 组会被自动删除，不占界面。
-- **完整适配 sing-box 1.14.0+**：无 `download_detour`、`store_rdrc`、`independent_cache` 等弃用字段与警告；规则集统一使用 GitHub 官方直连源 `raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing` 的 `.srs`（与 MyClash 同源），经顶层 `http_clients` + `route.default_http_client: "proxy-client"` 走代理组更新；防 DNS 泄露设计（geosite-cn 仅用于 DNS 分流、路由只认 geoip-cn、节点域名走国内直连 DNS 解析）保留不变。
-
-### 模板区分
-
-- `singbox.json`（含 fakeip 版）：OpenWrt / Linux 透明代理用，保留 `auto_redirect` 与局域网面板（`0.0.0.0:9090`）。
-- `singbox_win.json`（含 fakeip 版）：Android / iOS / Windows 用，不含 `auto_redirect` / `interface_name` / `dns_mode`，面板仅监听 `127.0.0.1:9090`。
-
 ## 鸣谢
 
 这段 js 脚本是由 chatgpt 参考[xishang0128](https://github.com/xishang0128)大佬所写
