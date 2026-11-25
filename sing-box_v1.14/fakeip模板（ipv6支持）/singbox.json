@@ -740,6 +740,10 @@
         "action": "reject"
       },
       {
+        "protocol": "stun",
+        "action": "reject"
+      },
+      {
         "domain_suffix": [
           "mcdn.bilivideo.com",
           "mcdn.bilivideo.cn",
@@ -795,7 +799,6 @@
       },
       {
         "port": [
-          3478,
           5201
         ],
         "outbound": "🎯 直连"
