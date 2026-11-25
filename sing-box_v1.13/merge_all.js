@@ -1,16 +1,17 @@
 const { name, type = "0", rules: rules_file } = $arguments;
 
 // ============================================================================
-// 私人固定节点极简合并脚本（零自动测速、零地区嵌套）
+// 私人固定节点合并脚本（基础组中文 Emoji + 分流组英文 Emoji + 全局自动测速）
 // 模板策略组只使用两个占位符：
 //   {all}              全部有效固定节点（保持订阅原有排列顺序）
-//   {relay_candidates} 全部有效节点剔除自身带 "detour": "Relay" 的落地节点
-//                      （防止链式代理回环死循环）
+//   {relay_candidates} 只含不带 detour 字段的节点（防止链式代理回环）
 // 规则：
 //   - 仅过滤显式标记 [停用]/[维护]/[disabled]/停用/维护中 的节点；
 //   - 节点 tag 去重（与模板已有 tag 一并去重），顺序保持订阅原样；
-//   - 若没有任何节点使用 "detour": "Relay"，自动删除 Relay 组（界面极简）；
-//   - 展开后为空的 selector 组会被迭代清理，系统出站与 route.final
+//   - 「🚀 默认代理」= 全部固定节点 + 「⚡ 自动测速」垫底（模板占位符展开）；
+//   - 「⚡ 自动测速」（urltest）由脚本写入全部固定节点；
+//   - 若没有任何节点使用 "detour": "🔗 链式中转"，自动删除链式中转组；
+//   - 展开后为空的 selector/urltest 组会被迭代清理，系统出站与 route.final
 //     目标组永不删除，保证不输出空 outbounds；
 //   - 模板中没有任何占位符时，回退旧版行为（全部节点追加进每个分组）。
 // ============================================================================
@@ -71,12 +72,12 @@ proxies = proxies.filter(p => {
 // 5. 添加新节点到 outbounds
 config.outbounds.push(...proxies);
 
-// 6. 占位符桶：{all} 全部节点；{relay_candidates} 剔除 detour=Relay 的节点
+// 6. 占位符桶：{all} 全部节点；{relay_candidates} 只含不带 detour 字段的节点
 const allTags = proxies.map(p => p.tag);
-const relayDetourTags = new Set(proxies.filter(p => p.detour === "Relay").map(p => p.tag));
+const relayDetourTags = new Set(proxies.filter(p => p.detour === "🔗 链式中转").map(p => p.tag));
 const buckets = {
   "{all}": allTags,
-  "{relay_candidates}": allTags.filter(t => !relayDetourTags.has(t)),
+  "{relay_candidates}": proxies.filter(p => p.detour === undefined).map(p => p.tag),
 };
 
 // 7. 遍历分组注入节点：含占位符按占位符展开；无占位符回退旧版追加行为
@@ -84,7 +85,7 @@ const templateUsesPlaceholders = config.outbounds.some(
   g => Array.isArray(g.outbounds) && g.outbounds.some(t => PLACEHOLDERS.includes(t))
 );
 config.outbounds.forEach(group => {
-  if (!Array.isArray(group.outbounds) || group.tag === "Direct-Out") return;
+  if (!Array.isArray(group.outbounds) || group.tag === "🎯 直连") return;
 
   if (templateUsesPlaceholders) {
     const expanded = [];
@@ -93,7 +94,7 @@ config.outbounds.forEach(group => {
       else expanded.push(t);
     });
     group.outbounds = expanded;
-  } else if (group.tag === "Relay") {
+  } else if (group.tag === "🔗 链式中转") {
     group.outbounds.push(...buckets["{relay_candidates}"]);
   } else {
     group.outbounds.push(...allTags);
@@ -107,14 +108,20 @@ config.outbounds.forEach(group => {
   }
 });
 
+// 8.5 「⚡ 自动测速」（urltest）写入全部固定节点（模板中该组 outbounds 为空）
 if (templateUsesPlaceholders) {
-  // 9. Relay 按需存在：没有任何节点 detour 到 Relay 时删除 Relay 组，
+  const urltestGroup = config.outbounds.find(o => o.tag === "⚡ 自动测速" && o.type === "urltest");
+  if (urltestGroup) urltestGroup.outbounds = [...allTags];
+}
+
+if (templateUsesPlaceholders) {
+  // 9. 链式中转按需存在：没有任何节点 detour 到「🔗 链式中转」时删除该组，
   //    并清理其他组对它的引用。
   if (!KEEP_RELAY_IF_UNUSED && relayDetourTags.size === 0) {
-    config.outbounds = config.outbounds.filter(o => o.tag !== "Relay");
+    config.outbounds = config.outbounds.filter(o => o.tag !== "🔗 链式中转");
     config.outbounds.forEach(g => {
       if (Array.isArray(g.outbounds)) {
-        g.outbounds = g.outbounds.filter(t => t !== "Relay");
+        g.outbounds = g.outbounds.filter(t => t !== "🔗 链式中转");
       }
     });
   }

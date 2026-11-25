@@ -2,7 +2,7 @@
   "http_clients": [
     {
       "tag": "proxy-client",
-      "detour": "Default"
+      "detour": "🚀 默认代理"
     }
   ],
   "services": [
@@ -41,7 +41,7 @@
         "tag": "proxy_dns",
         "type": "https",
         "server": "8.8.8.8",
-        "detour": "Default"
+        "detour": "🚀 默认代理"
       },
       {
         "tag": "cn_dns",
@@ -158,198 +158,226 @@
   ],
   "outbounds": [
     {
-      "tag": "Default",
+      "tag": "🚀 默认代理",
       "type": "selector",
       "outbounds": [
+        "{all}",
+        "⚡ 自动测速"
+      ],
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "urltest",
+      "tag": "⚡ 自动测速",
+      "outbounds": [],
+      "url": "https://www.apple.com/library/test/success.html",
+      "interval": "5m",
+      "tolerance": 50,
+      "interrupt_exist_connections": false
+    },
+    {
+      "tag": "🤖 AI",
+      "type": "selector",
+      "outbounds": [
+        "🚀 默认代理",
+        "⚡ 自动测速",
         "{all}"
       ],
       "interrupt_exist_connections": true
     },
     {
-      "tag": "AI",
+      "tag": "🔍 Google",
       "type": "selector",
       "outbounds": [
-        "Default",
+        "🚀 默认代理",
+        "⚡ 自动测速",
         "{all}"
       ],
       "interrupt_exist_connections": true
     },
     {
-      "tag": "Google",
+      "tag": "📺 YouTube",
       "type": "selector",
       "outbounds": [
-        "Default",
+        "🚀 默认代理",
+        "⚡ 自动测速",
         "{all}"
       ],
       "interrupt_exist_connections": true
     },
     {
-      "tag": "YouTube",
+      "tag": "🐙 GitHub",
       "type": "selector",
       "outbounds": [
-        "Default",
+        "🚀 默认代理",
+        "⚡ 自动测速",
         "{all}"
       ],
       "interrupt_exist_connections": true
     },
     {
-      "tag": "GitHub",
+      "tag": "✈️ Telegram",
       "type": "selector",
       "outbounds": [
-        "Default",
+        "🚀 默认代理",
+        "⚡ 自动测速",
         "{all}"
       ],
       "interrupt_exist_connections": true
     },
     {
-      "tag": "Telegram",
+      "tag": "🎵 TikTok",
       "type": "selector",
       "outbounds": [
-        "Default",
+        "🚀 默认代理",
+        "⚡ 自动测速",
         "{all}"
       ],
       "interrupt_exist_connections": true
     },
     {
-      "tag": "TikTok",
+      "tag": "🐦 Twitter",
       "type": "selector",
       "outbounds": [
-        "Default",
+        "🚀 默认代理",
+        "⚡ 自动测速",
         "{all}"
       ],
       "interrupt_exist_connections": true
     },
     {
-      "tag": "Twitter",
+      "tag": "🌐 Meta",
       "type": "selector",
       "outbounds": [
-        "Default",
+        "🚀 默认代理",
+        "⚡ 自动测速",
         "{all}"
       ],
       "interrupt_exist_connections": true
     },
     {
-      "tag": "Meta",
+      "tag": "🎬 Netflix",
       "type": "selector",
       "outbounds": [
-        "Default",
+        "🚀 默认代理",
+        "⚡ 自动测速",
         "{all}"
       ],
       "interrupt_exist_connections": true
     },
     {
-      "tag": "Netflix",
+      "tag": "🎧 Spotify",
       "type": "selector",
       "outbounds": [
-        "Default",
+        "🚀 默认代理",
+        "⚡ 自动测速",
         "{all}"
       ],
       "interrupt_exist_connections": true
     },
     {
-      "tag": "Spotify",
+      "tag": "🪙 Crypto",
       "type": "selector",
       "outbounds": [
-        "Default",
+        "🚀 默认代理",
+        "⚡ 自动测速",
         "{all}"
       ],
       "interrupt_exist_connections": true
     },
     {
-      "tag": "Crypto",
+      "tag": "🪟 Microsoft",
       "type": "selector",
       "outbounds": [
-        "Default",
+        "🚀 默认代理",
+        "⚡ 自动测速",
+        "🎯 直连",
         "{all}"
       ],
       "interrupt_exist_connections": true
     },
     {
-      "tag": "Microsoft",
+      "tag": "🍎 Apple",
       "type": "selector",
       "outbounds": [
-        "Default",
-        "Direct-Out",
+        "🚀 默认代理",
+        "⚡ 自动测速",
+        "🎯 直连",
         "{all}"
       ],
       "interrupt_exist_connections": true
     },
     {
-      "tag": "Apple",
+      "tag": "🎮 Steam",
       "type": "selector",
       "outbounds": [
-        "Default",
-        "Direct-Out",
+        "🚀 默认代理",
+        "⚡ 自动测速",
+        "🎯 直连",
         "{all}"
       ],
       "interrupt_exist_connections": true
     },
     {
-      "tag": "Steam",
+      "tag": "🍿 Emby",
       "type": "selector",
       "outbounds": [
-        "Default",
-        "Direct-Out",
+        "🚀 默认代理",
+        "⚡ 自动测速",
+        "🎯 直连",
         "{all}"
       ],
       "interrupt_exist_connections": true
     },
     {
-      "tag": "Emby",
+      "tag": "💳 PayPal",
       "type": "selector",
       "outbounds": [
-        "Default",
-        "Direct-Out",
+        "🚀 默认代理",
+        "⚡ 自动测速",
+        "🎯 直连",
         "{all}"
       ],
       "interrupt_exist_connections": true
     },
     {
-      "tag": "PayPal",
+      "tag": "🐟 漏网之鱼",
       "type": "selector",
       "outbounds": [
-        "Default",
-        "Direct-Out",
+        "🚀 默认代理",
+        "⚡ 自动测速",
+        "🎯 直连",
         "{all}"
       ],
       "interrupt_exist_connections": true
     },
     {
-      "tag": "漏网之鱼",
+      "tag": "🔔 FCM",
       "type": "selector",
       "outbounds": [
-        "Default",
-        "Direct-Out",
+        "🎯 直连",
+        "⚡ 自动测速",
+        "🚀 默认代理",
         "{all}"
       ],
       "interrupt_exist_connections": true
     },
     {
-      "tag": "FCM",
+      "tag": "🔗 链式中转",
       "type": "selector",
       "outbounds": [
-        "Direct-Out",
-        "Default",
-        "{all}"
-      ],
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "Relay",
-      "type": "selector",
-      "outbounds": [
-        "Direct-Out",
+        "🎯 直连",
         "{relay_candidates}"
       ],
       "interrupt_exist_connections": true
     },
     {
-      "tag": "Direct-Out",
+      "tag": "🎯 直连",
       "type": "direct"
     }
   ],
   "route": {
-    "final": "漏网之鱼",
+    "final": "🐟 漏网之鱼",
     "auto_detect_interface": true,
     "default_http_client": "proxy-client",
     "default_domain_resolver": {
@@ -604,7 +632,7 @@
       },
       {
         "network": "icmp",
-        "outbound": "Direct-Out"
+        "outbound": "🎯 直连"
       },
       {
         "action": "sniff"
@@ -624,7 +652,7 @@
       },
       {
         "ip_is_private": true,
-        "outbound": "Direct-Out"
+        "outbound": "🎯 直连"
       },
       {
         "protocol": "quic",
@@ -632,14 +660,14 @@
       },
       {
         "protocol": "bittorrent",
-        "outbound": "Direct-Out"
+        "outbound": "🎯 直连"
       },
       {
         "port": [
           3478,
           5201
         ],
-        "outbound": "Direct-Out"
+        "outbound": "🎯 直连"
       },
       {
         "domain_suffix": [
@@ -648,7 +676,7 @@
           "xiuxitong.com",
           "pc528.net"
         ],
-        "outbound": "Direct-Out"
+        "outbound": "🎯 直连"
       },
       {
         "domain_suffix": [
@@ -676,7 +704,7 @@
           }
         ],
         "action": "route",
-        "outbound": "Direct-Out"
+        "outbound": "🎯 直连"
       },
       {
         "domain": [
@@ -684,14 +712,14 @@
           "international-gfe.download.nvidia.com"
         ],
         "action": "route",
-        "outbound": "Direct-Out"
+        "outbound": "🎯 直连"
       },
       {
         "domain_suffix": [
           "ctaiot.com"
         ],
         "action": "route",
-        "outbound": "Direct-Out"
+        "outbound": "🎯 直连"
       },
       {
         "rule_set": [
@@ -702,118 +730,118 @@
           "geosite-microsoft-cn"
         ],
         "action": "route",
-        "outbound": "Direct-Out"
+        "outbound": "🎯 直连"
       },
       {
         "domain_suffix": [
           "uhdnow.com"
         ],
         "action": "route",
-        "outbound": "Emby"
+        "outbound": "🍿 Emby"
       },
       {
         "rule_set": "geosite-googlefcm",
         "action": "route",
-        "outbound": "FCM"
+        "outbound": "🔔 FCM"
       },
       {
         "rule_set": "geosite-youtube",
         "action": "route",
-        "outbound": "YouTube"
+        "outbound": "📺 YouTube"
       },
       {
         "domain": [
           "services.googleapis.cn"
         ],
         "action": "route",
-        "outbound": "Google"
+        "outbound": "🔍 Google"
       },
       {
         "rule_set": "geosite-google",
         "action": "route",
-        "outbound": "Google"
+        "outbound": "🔍 Google"
       },
       {
         "domain": [
           "cdn.usefathom.com"
         ],
         "action": "route",
-        "outbound": "AI"
+        "outbound": "🤖 AI"
       },
       {
         "rule_set": "geosite-ai",
         "action": "route",
-        "outbound": "AI"
+        "outbound": "🤖 AI"
       },
       {
         "rule_set": "geosite-github",
         "action": "route",
-        "outbound": "GitHub"
+        "outbound": "🐙 GitHub"
       },
       {
         "rule_set": "geosite-microsoft",
         "action": "route",
-        "outbound": "Microsoft"
+        "outbound": "🪟 Microsoft"
       },
       {
         "rule_set": "geosite-apple",
         "action": "route",
-        "outbound": "Apple"
+        "outbound": "🍎 Apple"
       },
       {
         "rule_set": "geosite-telegram",
         "action": "route",
-        "outbound": "Telegram"
+        "outbound": "✈️ Telegram"
       },
       {
         "rule_set": "geosite-steam",
         "action": "route",
-        "outbound": "Steam"
+        "outbound": "🎮 Steam"
       },
       {
         "rule_set": "geosite-tiktok",
         "action": "route",
-        "outbound": "TikTok"
+        "outbound": "🎵 TikTok"
       },
       {
         "rule_set": "geosite-twitter",
         "action": "route",
-        "outbound": "Twitter"
+        "outbound": "🐦 Twitter"
       },
       {
         "rule_set": "geosite-meta",
         "action": "route",
-        "outbound": "Meta"
+        "outbound": "🌐 Meta"
       },
       {
         "rule_set": "geosite-netflix",
         "action": "route",
-        "outbound": "Netflix"
+        "outbound": "🎬 Netflix"
       },
       {
         "rule_set": "geosite-emby",
         "action": "route",
-        "outbound": "Emby"
+        "outbound": "🍿 Emby"
       },
       {
         "rule_set": "geosite-spotify",
         "action": "route",
-        "outbound": "Spotify"
+        "outbound": "🎧 Spotify"
       },
       {
         "rule_set": "geosite-crypto",
         "action": "route",
-        "outbound": "Crypto"
+        "outbound": "🪙 Crypto"
       },
       {
         "rule_set": "geosite-paypal",
         "action": "route",
-        "outbound": "PayPal"
+        "outbound": "💳 PayPal"
       },
       {
         "rule_set": "geosite-geolocation-!cn",
         "action": "route",
-        "outbound": "Default"
+        "outbound": "🚀 默认代理"
       },
       {
         "action": "resolve"
@@ -821,32 +849,32 @@
       {
         "rule_set": "geoip-cn",
         "action": "route",
-        "outbound": "Direct-Out"
+        "outbound": "🎯 直连"
       },
       {
         "rule_set": "geoip-google",
         "action": "route",
-        "outbound": "Google"
+        "outbound": "🔍 Google"
       },
       {
         "rule_set": "geoip-telegram",
         "action": "route",
-        "outbound": "Telegram"
+        "outbound": "✈️ Telegram"
       },
       {
         "rule_set": "geoip-twitter",
         "action": "route",
-        "outbound": "Twitter"
+        "outbound": "🐦 Twitter"
       },
       {
         "rule_set": "geoip-facebook",
         "action": "route",
-        "outbound": "Meta"
+        "outbound": "🌐 Meta"
       },
       {
         "rule_set": "geoip-netflix",
         "action": "route",
-        "outbound": "Netflix"
+        "outbound": "🎬 Netflix"
       }
     ]
   }
