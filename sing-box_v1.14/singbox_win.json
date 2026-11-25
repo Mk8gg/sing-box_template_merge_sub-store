@@ -52,6 +52,14 @@
         "server": "local_dns"
       },
       {
+        "rule_set": [
+          "geosite-ads",
+          "geosite-httpdns"
+        ],
+        "action": "predefined",
+        "rcode": "NXDOMAIN"
+      },
+      {
         "clash_mode": "direct",
         "server": "cn_dns"
       },
@@ -98,7 +106,8 @@
           "geosite-synology",
           "geosite-nvidia-cn",
           "geosite-apple-cn",
-          "geosite-microsoft-cn"
+          "geosite-microsoft-cn",
+          "geosite-bilibili"
         ],
         "action": "route",
         "server": "cn_dns2"
@@ -330,6 +339,27 @@
       "interrupt_exist_connections": true
     },
     {
+      "type": "selector",
+      "tag": "💬 Discord",
+      "outbounds": [
+        "🚀 默认代理",
+        "⚡ 自动测速",
+        "{all}"
+      ],
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "📊 Speedtest",
+      "outbounds": [
+        "🎯 直连",
+        "🚀 默认代理",
+        "⚡ 自动测速",
+        "{all}"
+      ],
+      "interrupt_exist_connections": true
+    },
+    {
       "tag": "🐟 漏网之鱼",
       "type": "selector",
       "outbounds": [
@@ -390,8 +420,15 @@
       {
         "tag": "geosite-ads",
         "type": "remote",
+        "format": "source",
+        "url": "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Singbox.json",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "geosite-httpdns",
+        "type": "remote",
         "format": "binary",
-        "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/category-ads-all.srs",
+        "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/sing/geo/geosite/httpdns.srs",
         "update_interval": "24h"
       },
       {
@@ -409,10 +446,17 @@
         "update_interval": "24h"
       },
       {
+        "tag": "geosite-tracker",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/sing/geo/geosite/tracker.srs",
+        "update_interval": "24h"
+      },
+      {
         "tag": "geosite-games-cn",
         "type": "remote",
         "format": "binary",
-        "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/category-games-!cn@cn.srs",
+        "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/category-games@cn.srs",
         "update_interval": "24h"
       },
       {
@@ -433,7 +477,7 @@
         "tag": "geosite-apple-cn",
         "type": "remote",
         "format": "binary",
-        "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/apple-cn.srs",
+        "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/apple@cn.srs",
         "update_interval": "24h"
       },
       {
@@ -441,6 +485,13 @@
         "type": "remote",
         "format": "binary",
         "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/microsoft@cn.srs",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "geosite-bilibili",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/bilibili.srs",
         "update_interval": "24h"
       },
       {
@@ -570,6 +621,41 @@
         "update_interval": "24h"
       },
       {
+        "tag": "geosite-discord",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/discord.srs",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "geosite-speedtest",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/speedtest.srs",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "geosite-disney",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/disney.srs",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "geosite-hbo",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/hbo.srs",
+        "update_interval": "24h"
+      },
+      {
+        "tag": "geosite-bahamut",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/bahamut.srs",
+        "update_interval": "24h"
+      },
+      {
         "tag": "geoip-google",
         "type": "remote",
         "format": "binary",
@@ -607,9 +693,20 @@
     ],
     "rules": [
       {
-        "network": "icmp",
-        "action": "route",
-        "outbound": "🎯 直连"
+        "action": "sniff"
+      },
+      {
+        "type": "logical",
+        "mode": "or",
+        "rules": [
+          {
+            "protocol": "dns"
+          },
+          {
+            "port": 53
+          }
+        ],
+        "action": "hijack-dns"
       },
       {
         "port": [
@@ -651,6 +748,36 @@
         "outbound": "🎯 直连"
       },
       {
+        "network": "icmp",
+        "action": "route",
+        "outbound": "🎯 直连"
+      },
+      {
+        "clash_mode": "direct",
+        "outbound": "🎯 直连"
+      },
+      {
+        "clash_mode": "global",
+        "outbound": "🚀 默认代理"
+      },
+      {
+        "rule_set": [
+          "geosite-ads",
+          "geosite-httpdns"
+        ],
+        "action": "reject"
+      },
+      {
+        "domain_suffix": [
+          "mcdn.bilivideo.com",
+          "mcdn.bilivideo.cn",
+          "edge.mountaintoys.cn",
+          "h2.smtcdns.net",
+          "szbdyd.com"
+        ],
+        "action": "reject"
+      },
+      {
         "type": "logical",
         "mode": "and",
         "rules": [
@@ -669,41 +796,22 @@
         "action": "reject"
       },
       {
-        "action": "sniff"
-      },
-      {
         "type": "logical",
         "mode": "or",
         "rules": [
           {
-            "protocol": "dns"
+            "domain": [
+              "ic.adobe.io",
+              "cc-api-data.adobe.io"
+            ]
           },
           {
-            "port": 53
+            "domain_regex": "^[a-z\\d]{10}\\.adobe\\.io$"
+          },
+          {
+            "domain_suffix": "adobestats.io"
           }
         ],
-        "action": "hijack-dns"
-      },
-      {
-        "clash_mode": "direct",
-        "outbound": "🎯 直连"
-      },
-      {
-        "clash_mode": "global",
-        "outbound": "🚀 默认代理"
-      },
-      {
-        "domain_suffix": [
-          "mcdn.bilivideo.com",
-          "mcdn.bilivideo.cn",
-          "edge.mountaintoys.cn",
-          "h2.smtcdns.net",
-          "szbdyd.com"
-        ],
-        "action": "reject"
-      },
-      {
-        "rule_set": "geosite-ads",
         "action": "reject"
       },
       {
@@ -724,6 +832,37 @@
         "outbound": "🎯 直连"
       },
       {
+        "protocol": "bittorrent",
+        "action": "route",
+        "outbound": "🎯 直连"
+      },
+      {
+        "rule_set": "geosite-tracker",
+        "action": "route",
+        "outbound": "🎯 直连"
+      },
+      {
+        "port": [
+          3478,
+          5201
+        ],
+        "action": "route",
+        "outbound": "🎯 直连"
+      },
+      {
+        "rule_set": [
+          "geosite-apple-cn",
+          "geosite-microsoft-cn",
+          "geosite-games-cn",
+          "geosite-nvidia-cn",
+          "geosite-synology",
+          "geosite-bilibili",
+          "geosite-cn"
+        ],
+        "action": "route",
+        "outbound": "🎯 直连"
+      },
+      {
         "domain": [
           "fsend.cn",
           "international-gfe.download.nvidia.com"
@@ -739,22 +878,6 @@
         "outbound": "🎯 直连"
       },
       {
-        "rule_set": [
-          "geosite-games-cn",
-          "geosite-synology",
-          "geosite-nvidia-cn",
-          "geosite-apple-cn",
-          "geosite-microsoft-cn"
-        ],
-        "action": "route",
-        "outbound": "🎯 直连"
-      },
-      {
-        "protocol": "bittorrent",
-        "action": "route",
-        "outbound": "🎯 直连"
-      },
-      {
         "domain_suffix": [
           "ileidian.com",
           "ottiptv.cc",
@@ -764,25 +887,6 @@
         ],
         "action": "route",
         "outbound": "🎯 直连"
-      },
-      {
-        "type": "logical",
-        "mode": "or",
-        "rules": [
-          {
-            "domain": [
-              "ic.adobe.io",
-              "cc-api-data.adobe.io"
-            ]
-          },
-          {
-            "domain_regex": "^[a-z\\d]{10}\\.adobe\\.io$"
-          },
-          {
-            "domain_suffix": "adobestats.io"
-          }
-        ],
-        "action": "reject"
       },
       {
         "domain_suffix": [
@@ -866,7 +970,21 @@
         "outbound": "🌐 Meta"
       },
       {
+        "rule_set": "geosite-discord",
+        "action": "route",
+        "outbound": "💬 Discord"
+      },
+      {
         "rule_set": "geosite-netflix",
+        "action": "route",
+        "outbound": "🎬 Netflix"
+      },
+      {
+        "rule_set": [
+          "geosite-disney",
+          "geosite-hbo",
+          "geosite-bahamut"
+        ],
         "action": "route",
         "outbound": "🎬 Netflix"
       },
@@ -891,17 +1009,17 @@
         "outbound": "💳 PayPal"
       },
       {
+        "rule_set": "geosite-speedtest",
+        "action": "route",
+        "outbound": "📊 Speedtest"
+      },
+      {
         "rule_set": "geosite-geolocation-!cn",
         "action": "route",
         "outbound": "🚀 默认代理"
       },
       {
         "action": "resolve"
-      },
-      {
-        "rule_set": "geoip-cn",
-        "action": "route",
-        "outbound": "🎯 直连"
       },
       {
         "rule_set": "geoip-google",
@@ -927,6 +1045,11 @@
         "rule_set": "geoip-netflix",
         "action": "route",
         "outbound": "🎬 Netflix"
+      },
+      {
+        "rule_set": "geoip-cn",
+        "action": "route",
+        "outbound": "🎯 直连"
       }
     ]
   }
