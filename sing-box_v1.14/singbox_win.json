@@ -350,17 +350,6 @@
     },
     {
       "type": "selector",
-      "tag": "📊 Speedtest",
-      "outbounds": [
-        "🇨🇳 国内直连",
-        "🚀 默认代理",
-        "⚡ 自动测速",
-        "{all}"
-      ],
-      "interrupt_exist_connections": true
-    },
-    {
-      "type": "selector",
       "tag": "🇨🇳 国内直连",
       "outbounds": [
         "🎯 直连",
@@ -984,7 +973,7 @@
       {
         "rule_set": "geosite-speedtest",
         "action": "route",
-        "outbound": "📊 Speedtest"
+        "outbound": "🎯 直连"
       },
       {
         "rule_set": "geosite-geolocation-!cn",
