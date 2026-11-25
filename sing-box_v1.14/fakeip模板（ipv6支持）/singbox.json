@@ -371,6 +371,15 @@
       "interrupt_exist_connections": true
     },
     {
+      "type": "selector",
+      "tag": "🇨🇳 国内直连",
+      "outbounds": [
+        "🎯 直连",
+        "🚀 默认代理"
+      ],
+      "interrupt_exist_connections": true
+    },
+    {
       "tag": "🐟 漏网之鱼",
       "type": "selector",
       "outbounds": [
@@ -802,7 +811,7 @@
           "geosite-cn"
         ],
         "action": "route",
-        "outbound": "🎯 直连"
+        "outbound": "🇨🇳 国内直连"
       },
       {
         "domain_suffix": [
@@ -811,7 +820,7 @@
           "xiuxitong.com",
           "pc528.net"
         ],
-        "outbound": "🎯 直连"
+        "outbound": "🇨🇳 国内直连"
       },
       {
         "domain": [
@@ -819,14 +828,14 @@
           "international-gfe.download.nvidia.com"
         ],
         "action": "route",
-        "outbound": "🎯 直连"
+        "outbound": "🇨🇳 国内直连"
       },
       {
         "domain_suffix": [
           "ctaiot.com"
         ],
         "action": "route",
-        "outbound": "🎯 直连"
+        "outbound": "🇨🇳 国内直连"
       },
       {
         "domain_suffix": [
@@ -989,7 +998,7 @@
       {
         "rule_set": "geoip-cn",
         "action": "route",
-        "outbound": "🎯 直连"
+        "outbound": "🇨🇳 国内直连"
       }
     ]
   }
