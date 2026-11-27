@@ -1,68 +1,87 @@
 # sing-box_template_merge_sub-store
 
-## 关于防 DNS 泄露
+## 模板概览
 
-本仓库的 sing-box 及 mihomo 配置中，自带防 DNS 泄露功能，并且较市面主流的防泄漏方案有所优化，其运行逻辑如下：
+本仓库提供适用于 **sing-box v1.14** 与 **sing-box v1.15** 的配置模板，以及配套的 Sub-Store 节点合并脚本 [merge.js](merge.js) 和 OpenWRT 自动更新脚本。
 
-1. cn 域名列表外的所有域名，均会通过节点代理向 1.1.1.1 这类境外公共 dns 发起解析请求，不会有任何本地的 dns 请求记录，并且可以确保解析结果是真实无污染无劫持的。
-2. 根据 1 获得的无污染 ip，匹配 cn 的 ip 列表，决定是否需要代理
+| 目录 | 说明 | 适用核心版本 |
+| --- | --- | --- |
+| `sing-box_v1.14/` | RealIP 模板（IPv4），完整 7 层路由规则 + 中文/Emoji 策略组 + Zashboard 面板 | sing-box 1.14+ |
+| `sing-box_v1.14/fakeip模板（ipv6支持）/` | FakeIP 模板（支持 IPv6，使用标准 `198.18.0.0/15` 与 `fc00::/18` 网段） | sing-box 1.14+ |
+| `sing-box_v1.15/` | 精简 RealIP 模板，启用原生 `sing-tun`（移除废弃 `stack`）与 Optimistic DNS 缓存 | sing-box 1.15+ |
 
-也就是说，假如有一个站点 xx.com，其本身不在 cn 的 domain 列表内，但他的真实 ip 属 cn 境内，那么他还是会走直连，只是 dns 环节经过节点代理。
-而市面上流行的相当多旧方案，在这种情况下却会将 xx.com 无脑进行代理，这是非常不合理且效率低下的。
-（事实上你甚至可以用有污染的 ip 进行判断，由于只要不匹配 cn 的 ip 规则，均会通过代理，所以实际连接不会有什么影响）
+每套模板均提供两个平台版本：
 
-**注：路由规则中只有cnip而没有cnsite并非漏写，而是特意设计，即：cnsite仅用来做dns分流，真实的路由分流只取决于真实ip是否属于cnip** 
+- **`singbox.json`（Linux / OpenWRT 网关版）**：启用 `auto_redirect: true`，管理面板默认监听 `0.0.0.0:9090`（方便局域网管理）。**安全提示：路由器/局域网部署强烈建议为 `secret` 设置强密码。**
+- **`singbox_win.json`（Windows / macOS / Android / iOS 客户端版）**：移除 `auto_redirect`，开启 `platform.http_proxy`，管理面板监听地址锁定为 `127.0.0.1:9090` 防止局域网未授权访问。
 
-## sing-box配置模板使用说明
+## 关于防 DNS 泄露与安全加固
 
-提供两套配置模板及一个 js 脚本，js 脚本使用参考下方的使用步骤
+本仓库模板默认内置多层防泄露与拦截机制：
 
-两个版本间的唯一区别是 inbounds 中是否含有 auto_redirect 字段，这个特性不光 windows，即使是安卓、iOS 同样并不支持
+1. **无污染 DNS 分流**：
+   - 私有域名交由 `local_dns` 解析，广告与 HTTPDNS 域名在 DNS 层直接返回 `NXDOMAIN`。
+   - 对 `HTTPS` / `SVCB`（Type 65/64）记录返回 `NOERROR` 空响应，避免 ECH 破坏嗅探或 `ipv4hint`/`ipv6hint` 绕过 FakeIP；RealIP 模板同时屏蔽 `AAAA` 防止 IPv6 泄露。
+   - 国内精准子集与 `geosite-cn` 走加密国内 DoH/DoT（`223.5.5.5` / `1.12.12.12`），其余域名经代理节点走境外 DoH（`8.8.8.8`），不向本地运营商泄露境外查询。
+   - `v1.14` 模板采用“精准代理例外 -> 国内直连子集 -> 海外应用分流 -> `geosite-cn` / `geosite-geolocation-!cn` -> `resolve` + GeoIP 兜底”的 7 层有序规则；`v1.15` 模板保留轻量设计（`cnsite` 仅做 DNS 分流，路由兜底以无污染解析后的 `cnip` 为准）。
+2. **防绕过与防 WebRTC 泄露**：
+   - 在拦截层屏蔽 **DoT/DoQ 853 端口**、**HTTPDNS 域名与常见厂商 IP**、**STUN 协议**（防止 WebRTC 暴露真实 IP）、PCDN 及非国内 QUIC（UDP 443 / `protocol: quic`）。
+   - 所有远程规则集均使用 `.srs` 二进制格式，降低内存占用与加载耗时。
 
-因此诸如 OpenWRT、Debian 之类的 linux 发行版应使用无后缀版本（开启 auto_redirect，作为主路由或旁路网关实现透明代理）
+## 使用步骤（Sub-Store + `merge.js`）
 
-其他如 Windows、安卓、iOS 均应使用有后缀的版本（不使用 auto_redirect）
+1. 在 Sub-Store 的「文件管理」中上传所需的模板 JSON（如 `singbox.json` 或 `singbox_win.json`）。
+2. 记下 Sub-Store 中单条订阅或组合订阅的名称。
+3. 编辑该模板文件，添加一个「脚本操作」，链接填写：
 
-p.s. 使用openwrt配套脚本需要满足：确保使用官方 ipk 方式安装（需要支持/etc/init.d/sing-box 指令）
-openwrt端的**mac地址过滤、仅常用端口代理**脚本在1.14中已不再需要（config中的bypass、exclude字段可实现等同效果）
-
-## 使用步骤（默认模式）
-
-1. 在 sub-store 上传 singbox_template.json
-2. 记住在 sub-store 中你的单条订阅或组合订阅的名称
-3. 在 sub-store 的文件管理功能中编辑 singbox_template.json 添加一个脚本操作，并且选择链接：
-
+```text
+https://ghfast.top/raw.githubusercontent.com/Mk8gg/sing-box_template_merge_sub-store/main/merge.js#name=<订阅名称>&type=<订阅类型>
 ```
-https://ghfast.top/raw.githubusercontent.com/Mk8gg/sing-box_template_merge_sub-store/main/merge.js#name=<你在sub-store中的订阅名称>&type=<在sub-store中的订阅类型>
-```
 
-type 可以赋值 0 或 1,0 表示单条订阅，1 表示组合订阅
+支持的参数：
 
-4. 添加脚本操作后再次访问 sub-store 中的 singbox_template.json，就已经是把节点信息正确插入的完整可用配置了
+- `name`（必填）：Sub-Store 中的单条订阅或组合订阅名称。
+- `type`（可选，默认 `0`）：`0` 表示单条订阅，`1` 表示组合订阅（`collection`）。
+- `rules`（可选）：Sub-Store 中的自定义规则 JSON 文件名，脚本会自动将其插入到 `clash_mode` 之后（若模板无 `clash_mode`，则回退插入到 `hijack-dns`/`sniff` 之后，避免落入末尾成为死规则）。
+- `keep_relay`（可选，默认 `0`）：设为 `1` 时，即使当前没有任何节点配置 `detour` 指向中转组，也强制保留链式中转策略组。
+
+`merge.js` 内置机制：
+
+- 自动过滤显式停用/维护节点与常见机场信息伪节点（剩余流量、套餐到期、官网、重置时间等）。
+- 同名节点（或与模板内置 tag 冲突的节点）自动追加 `#2`、`#3` 后缀重命名，不再静默丢弃。
+- 同时兼容 `v1.14` 占位符模板（`{all}`、`{relay_candidates}`、`🔗 链式中转`）与 `v1.15` 传统模板（`Relay`、`Auto`）。
+- 订阅拉取为空或策略组被清理时，自动为受保护策略组兜底直连出站，并同步修复 `route.rules` 中的悬空出站引用，防止 `sing-box` 启动报错。
+
+## OpenWRT 自动更新脚本
+
+`sing-box_v1.14/OpenWRT配套脚本/` 与 `sing-box_v1.15/OpenWRT配套脚本/` 中的更新脚本可配合 `crontab` 使用（需使用官方 ipk 安装，支持 `/etc/init.d/sing-box`）。使用前请将脚本顶部 `CONFIG_URL` 替换为你的 Sub-Store 模板链接。
+
+脚本执行流程：并发锁防重入 -> `curl -fsSL` 带超时重试下载到同分区临时文件 -> `sing-box check` 预校验 -> 内容无变化跳过重启 -> 备份旧配置 -> `mv` 原子替换 -> 重启后检测进程状态，失败则自动回滚旧配置 -> 自动截断 `update.log`（最多保留 200 行，保护路由器闪存）。
+
+> 在 sing-box 1.14+ 中，旧版的 MAC 地址过滤与仅常用端口代理脚本已不再需要，可直接使用模板中的路由规则与 `exclude` 字段实现。
 
 ## 关于链式代理及中继节点分组
 
-使用本项目的 sing-box 模板，会发现多出了一个“Relay”策略组，并且默认选择是“Direct-Out”，他要配合你的“链式代理落地节点”使用。
+模板中内置了链式中转策略组（`v1.14` 为 `🔗 链式中转`，`v1.15` 为 `Relay`，默认直连），用于配合链式代理落地节点使用。
 
-何为链式代理落地节点：
-在 sing-box 中，你可以在你的节点信息最后添加一行
+在你的落地节点配置中添加：
 
 ```json
-"detour": "其他节点tag或分组tag"
+"detour": "🔗 链式中转"
 ```
 
-这样当你在例如“TikTok”分组中选中这条链式代理节点时，完整的访问路径就会是
+（若使用 `v1.15` 模板，则填写 `"detour": "Relay"`。）
 
-本机 -> "其他节点 tag 或分组 tag" -> 这条链式节点（作为落地）
+当你在某个应用分组（如 `🎬 Netflix` 或 `🎵 TikTok`）中选中该落地节点时，访问路径为：
 
-因此使用本项目的配置模板，你只需要指定特定节点的 detour 为“Relay”，并在面板中切换“Relay”，就可以指定不同的链式前置
+```text
+本机 -> 中转组选中的前置节点（或直连） -> 链式落地节点 -> 目标站点
+```
 
-（也就是说，当你通过这种方式并且定义链式节点的分流规则时（如：将 netflix 分流至链式节点），就仅需要在两台 vps 配置代理协议本身来实现 sniproxy+dnsmasq 的落地机分流解锁功能）
-
-这种方式更加灵活且更加全面，可以随时将落地节点切换为直连使用
+- `{relay_candidates}`（以及 `v1.15` 的 `Relay` 组）仅填充**不带 `detour` 字段**的节点，从根源避免链式代理回环。
+- 默认情况下，若订阅中没有任何节点通过 `detour` 指向中转组，`merge.js` 会自动清理该中转组以保持面板精简；如需始终显示，请在脚本参数中附加 `&keep_relay=1`。
 
 ## 鸣谢
 
-这段 js 脚本是由 chatgpt 参考[xishang0128](https://github.com/xishang0128)大佬所写
-
-[神器 sub-store](https://github.com/sub-store-org/Sub-Store)太 tm 好用了，强烈推荐！！！
+- 原始合并脚本灵感参考自 [xishang0128](https://github.com/xishang0128)
+- 推荐搭配 [Sub-Store](https://github.com/sub-store-org/Sub-Store) 管理订阅与模板
