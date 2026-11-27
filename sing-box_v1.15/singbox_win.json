@@ -25,6 +25,7 @@
   },
   "dns": {
     "final": "proxy_dns",
+    "strategy": "ipv4_only",
     "optimistic": {
       "enabled": true,
       "timeout": "3d"
@@ -43,19 +44,15 @@
       },
       {
         "tag": "cn_dns2",
-        "type": "tls",
+        "type": "https",
         "server": "1.12.12.12"
-      },
-      {
-        "tag": "local_dns",
-        "type": "local"
       }
     ],
     "rules": [
       {
         "rule_set": "geosite-private",
         "action": "route",
-        "server": "local_dns"
+        "server": "cn_dns"
       },
       {
         "rule_set": [
@@ -64,6 +61,15 @@
         ],
         "action": "predefined",
         "rcode": "NXDOMAIN"
+      },
+      {
+        "query_type": [
+          "AAAA",
+          "HTTPS",
+          "SVCB"
+        ],
+        "action": "predefined",
+        "rcode": "NOERROR"
       },
       {
         "clash_mode": "direct",
@@ -76,17 +82,17 @@
         "server": "proxy_dns"
       },
       {
-        "query_type": [
-          "AAAA",
-          "HTTPS",
-          "SVCB"
-        ],
-        "action": "predefined",
-        "rcode": "NOERROR"
-      },
-      {
         "domain_suffix": [
-          "googleapis.cn"
+          "googleapis.cn",
+          "push.apple.com",
+          "uhdnow.com",
+          "023168.xyz",
+          "sexlikereal.com",
+          "browserleaks.com",
+          "browserleaks.org",
+          "dnsleaktest.com",
+          "ipleak.net",
+          "whoer.net"
         ],
         "action": "route",
         "server": "proxy_dns"
@@ -97,34 +103,38 @@
         "server": "cn_dns2"
       },
       {
-        "type": "logical",
-        "mode": "or",
-        "action": "route",
-        "rules": [
-          {
-            "domain_suffix": [
-              "ileidian.com",
-              "ghfast.top",
-              "ottiptv.cc",
-              "xiuxitong.com",
-              "pc528.net",
-              "tracker.m-team.cc"
-            ]
-          },
-          {
-            "rule_set": "cnsite"
-          }
+        "domain_suffix": [
+          "ileidian.com",
+          "ghfast.top",
+          "ottiptv.cc",
+          "xiuxitong.com",
+          "pc528.net",
+          "tracker.m-team.cc"
         ],
+        "action": "route",
         "server": "cn_dns"
       },
       {
-        "rule_set": "gfw",
+        "rule_set": [
+          "gfw",
+          "aiservice",
+          "telegramsite",
+          "tiktok",
+          "instagram",
+          "netflixsite",
+          "disney",
+          "hbo",
+          "hulu",
+          "paypal",
+          "emby"
+        ],
         "action": "route",
         "server": "proxy_dns"
       },
       {
+        "rule_set": "cnsite",
         "action": "route",
-        "server": "proxy_dns"
+        "server": "cn_dns"
       }
     ]
   },
@@ -257,7 +267,11 @@
     },
     {
       "type": "direct",
-      "tag": "Direct-Out"
+      "tag": "Direct-Out",
+      "domain_resolver": {
+        "server": "cn_dns",
+        "strategy": "ipv4_only"
+      }
     }
   ],
   "route": {
@@ -265,7 +279,8 @@
     "auto_detect_interface": true,
     "default_http_client": "proxy-client",
     "default_domain_resolver": {
-      "server": "cn_dns"
+      "server": "cn_dns",
+      "strategy": "prefer_ipv4"
     },
     "rule_set": [
       {
@@ -563,7 +578,12 @@
       {
         "domain_suffix": [
           "googleapis.cn",
-          "push.apple.com"
+          "push.apple.com",
+          "browserleaks.com",
+          "browserleaks.org",
+          "dnsleaktest.com",
+          "ipleak.net",
+          "whoer.net"
         ],
         "action": "route",
         "outbound": "Default"

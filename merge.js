@@ -360,10 +360,20 @@ config.route.rules.forEach(rule => {
   }
 });
 
-const repairDetour = obj => {
+const repairDetour = (obj, isDns = false) => {
   if (!obj || typeof obj !== "object") return;
   if (typeof obj.detour === "string" && obj.detour && !finalAliveTags.has(obj.detour)) {
-    obj.detour = directTag;
+    if (isDns) {
+      if (fallbackOutbound !== directTag && finalAliveTags.has(fallbackOutbound)) {
+        logWarn(`DNS detour "${obj.detour}" 无效，已重指向 "${fallbackOutbound}"`);
+        obj.detour = fallbackOutbound;
+      } else {
+        logWarn(`DNS detour "${obj.detour}" 无效，已移除（sing-box 1.12+ 禁止 detour 指向空 direct）`);
+        delete obj.detour;
+      }
+    } else {
+      obj.detour = directTag;
+    }
   }
   if (
     typeof obj.download_detour === "string" &&
@@ -372,9 +382,9 @@ const repairDetour = obj => {
   ) {
     obj.download_detour = directTag;
   }
-  Object.values(obj).forEach(repairDetour);
+  Object.values(obj).forEach(v => repairDetour(v, isDns));
 };
-repairDetour(config.dns);
+repairDetour(config.dns, true);
 repairDetour(config.http_clients);
 repairDetour(config.services);
 repairDetour(config.route.rule_set);

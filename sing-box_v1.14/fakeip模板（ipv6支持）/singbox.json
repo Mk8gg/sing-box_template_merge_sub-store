@@ -37,6 +37,7 @@
   },
   "dns": {
     "final": "proxy_dns",
+    "strategy": "prefer_ipv4",
     "servers": [
       {
         "tag": "proxy_dns",
@@ -50,21 +51,22 @@
         "server": "223.5.5.5"
       },
       {
+        "tag": "cn_dns2",
+        "type": "https",
+        "server": "1.12.12.12"
+      },
+      {
         "tag": "fake_dns",
         "type": "fakeip",
         "inet4_range": "198.18.0.0/15",
         "inet6_range": "fc00::/18"
-      },
-      {
-        "tag": "local_dns",
-        "type": "local"
       }
     ],
     "rules": [
       {
         "rule_set": "geosite-private",
         "action": "route",
-        "server": "local_dns"
+        "server": "cn_dns"
       },
       {
         "rule_set": [
@@ -97,8 +99,22 @@
         "server": "fake_dns"
       },
       {
+        "clash_mode": "global",
+        "action": "route",
+        "server": "proxy_dns"
+      },
+      {
+        "domain": [
+          "cdn.usefathom.com"
+        ],
         "domain_suffix": [
-          "googleapis.cn"
+          "googleapis.cn",
+          "uhdnow.com",
+          "browserleaks.com",
+          "browserleaks.org",
+          "dnsleaktest.com",
+          "ipleak.net",
+          "whoer.net"
         ],
         "query_type": [
           "A",
@@ -108,43 +124,73 @@
         "server": "fake_dns"
       },
       {
-        "type": "logical",
-        "mode": "or",
-        "action": "route",
-        "rules": [
-          {
-            "domain": [
-              "fsend.cn",
-              "international-gfe.download.nvidia.com"
-            ]
-          },
-          {
-            "domain_suffix": [
-              ".cn",
-              "ctaiot.com",
-              "ileidian.com",
-              "ottiptv.cc",
-              "xiuxitong.com",
-              "pc528.net",
-              "tracker.m-team.cc"
-            ]
-          },
-          {
-            "rule_set": [
-              "geosite-apple-cn",
-              "geosite-microsoft-cn",
-              "geosite-games-cn",
-              "geosite-nvidia-cn",
-              "geosite-synology",
-              "geosite-bilibili",
-              "geosite-cn"
-            ]
-          }
+        "domain": [
+          "cdn.usefathom.com"
         ],
+        "domain_suffix": [
+          "googleapis.cn",
+          "uhdnow.com",
+          "browserleaks.com",
+          "browserleaks.org",
+          "dnsleaktest.com",
+          "ipleak.net",
+          "whoer.net"
+        ],
+        "action": "route",
+        "server": "proxy_dns"
+      },
+      {
+        "rule_set": [
+          "geosite-apple-cn",
+          "geosite-microsoft-cn",
+          "geosite-games-cn",
+          "geosite-nvidia-cn",
+          "geosite-synology",
+          "geosite-bilibili"
+        ],
+        "action": "route",
+        "server": "cn_dns2"
+      },
+      {
+        "domain": [
+          "fsend.cn",
+          "international-gfe.download.nvidia.com"
+        ],
+        "domain_suffix": [
+          "ctaiot.com",
+          "ileidian.com",
+          "ottiptv.cc",
+          "xiuxitong.com",
+          "pc528.net",
+          "tracker.m-team.cc"
+        ],
+        "action": "route",
         "server": "cn_dns"
       },
       {
-        "rule_set": "geosite-geolocation-!cn",
+        "rule_set": [
+          "geosite-geolocation-!cn",
+          "geosite-youtube",
+          "geosite-google",
+          "geosite-ai",
+          "geosite-github",
+          "geosite-microsoft",
+          "geosite-apple",
+          "geosite-telegram",
+          "geosite-steam",
+          "geosite-tiktok",
+          "geosite-twitter",
+          "geosite-meta",
+          "geosite-discord",
+          "geosite-netflix",
+          "geosite-disney",
+          "geosite-hbo",
+          "geosite-bahamut",
+          "geosite-emby",
+          "geosite-spotify",
+          "geosite-crypto",
+          "geosite-paypal"
+        ],
         "query_type": [
           "A",
           "AAAA"
@@ -153,21 +199,61 @@
         "server": "fake_dns"
       },
       {
+        "rule_set": [
+          "geosite-geolocation-!cn",
+          "geosite-youtube",
+          "geosite-google",
+          "geosite-ai",
+          "geosite-github",
+          "geosite-microsoft",
+          "geosite-apple",
+          "geosite-telegram",
+          "geosite-steam",
+          "geosite-tiktok",
+          "geosite-twitter",
+          "geosite-meta",
+          "geosite-discord",
+          "geosite-netflix",
+          "geosite-disney",
+          "geosite-hbo",
+          "geosite-bahamut",
+          "geosite-emby",
+          "geosite-spotify",
+          "geosite-crypto",
+          "geosite-paypal"
+        ],
+        "action": "route",
+        "server": "proxy_dns"
+      },
+      {
+        "rule_set": "geosite-cn",
+        "action": "route",
+        "server": "cn_dns"
+      },
+      {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
         "action": "evaluate",
         "server": "proxy_dns"
       },
       {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
         "match_response": true,
         "rule_set": "geoip-cn",
         "action": "route",
         "server": "cn_dns"
       },
       {
-        "action": "route",
         "query_type": [
           "A",
           "AAAA"
         ],
+        "action": "route",
         "server": "fake_dns",
         "rewrite_ttl": 1
       }
@@ -193,6 +279,7 @@
         "192.168.0.0/16"
       ],
       "strict_route": true,
+      "dns_mode": "hijack",
       "auto_redirect": true,
       "stack": "mixed"
     },
@@ -439,7 +526,11 @@
     },
     {
       "tag": "🎯 直连",
-      "type": "direct"
+      "type": "direct",
+      "domain_resolver": {
+        "server": "cn_dns",
+        "strategy": "prefer_ipv4"
+      }
     }
   ],
   "route": {
@@ -447,7 +538,8 @@
     "auto_detect_interface": true,
     "default_http_client": "proxy-client",
     "default_domain_resolver": {
-      "server": "cn_dns"
+      "server": "cn_dns",
+      "strategy": "prefer_ipv4"
     },
     "rule_set": [
       {
@@ -907,6 +999,17 @@
         "outbound": "🤖 AI"
       },
       {
+        "domain_suffix": [
+          "browserleaks.com",
+          "browserleaks.org",
+          "dnsleaktest.com",
+          "ipleak.net",
+          "whoer.net"
+        ],
+        "action": "route",
+        "outbound": "🚀 默认代理"
+      },
+      {
         "rule_set": [
           "geosite-apple-cn",
           "geosite-microsoft-cn",
@@ -1034,14 +1137,14 @@
         "outbound": "💳 PayPal"
       },
       {
-        "rule_set": "geosite-cn",
-        "action": "route",
-        "outbound": "🇨🇳 国内直连"
-      },
-      {
         "rule_set": "geosite-geolocation-!cn",
         "action": "route",
         "outbound": "🚀 默认代理"
+      },
+      {
+        "rule_set": "geosite-cn",
+        "action": "route",
+        "outbound": "🇨🇳 国内直连"
       },
       {
         "action": "resolve",
