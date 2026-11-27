@@ -278,7 +278,7 @@
         "tag": "geosite-ads",
         "type": "remote",
         "format": "binary",
-        "url": "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Singbox.srs",
+        "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/category-ads-all.srs",
         "update_interval": "24h"
       },
       {
