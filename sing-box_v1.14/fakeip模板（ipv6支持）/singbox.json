@@ -485,15 +485,6 @@
       "interrupt_exist_connections": true
     },
     {
-      "type": "selector",
-      "tag": "🇨🇳 国内直连",
-      "outbounds": [
-        "🎯 直连",
-        "🚀 默认代理"
-      ],
-      "interrupt_exist_connections": true
-    },
-    {
       "tag": "🐟 漏网之鱼",
       "type": "selector",
       "outbounds": [
@@ -1019,7 +1010,7 @@
           "geosite-bilibili"
         ],
         "action": "route",
-        "outbound": "🇨🇳 国内直连"
+        "outbound": "🎯 直连"
       },
       {
         "domain": [
@@ -1027,7 +1018,7 @@
           "international-gfe.download.nvidia.com"
         ],
         "action": "route",
-        "outbound": "🇨🇳 国内直连"
+        "outbound": "🎯 直连"
       },
       {
         "domain_suffix": [
@@ -1039,7 +1030,7 @@
           "tracker.m-team.cc"
         ],
         "action": "route",
-        "outbound": "🇨🇳 国内直连"
+        "outbound": "🎯 直连"
       },
       {
         "rule_set": "geosite-googlefcm",
@@ -1144,7 +1135,7 @@
       {
         "rule_set": "geosite-cn",
         "action": "route",
-        "outbound": "🇨🇳 国内直连"
+        "outbound": "🎯 直连"
       },
       {
         "action": "resolve",
@@ -1178,7 +1169,7 @@
       {
         "rule_set": "geoip-cn",
         "action": "route",
-        "outbound": "🇨🇳 国内直连"
+        "outbound": "🎯 直连"
       }
     ]
   }
